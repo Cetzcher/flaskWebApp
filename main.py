@@ -1,54 +1,122 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, jsonify
 app = Flask(__name__)
 
 """
-Paths should look somewhat like this:
-
-GET    /                    index, show all categories                
-POST   /                    creates a category.
-
-GET    /<string:cat>        shows overview of that category.
-POST   /<cat>               creates a new item.
-
-GET    /<cat>/<string:item> shows a description of the item and links to a rate page
-
-GET    /<cat>/<item>/rate   shows all ratings of an item
-POST   /<cat>/<item>/rate   rates an item.
-
-GET    /<cat>/<item>/rate/<int:id>
-
- 
+THIS SHOULD ACT AS THE SERVICE URL
+FOR THE APPLICATION
 """
 
-# this is for testing only, should be moved to database interaction.
-DATA = {"books": ["LOTR", "The Art of Computer programming"], "games": {}, "movies": {}}
+class Category:
+
+    LAST_ID = 0
+
+    def __init__(self, name):
+        self.id = Category.LAST_ID
+        Category.LAST_ID += 1
+        self.name = name
+        self.items = {}
+
+    def add_item(self, item):
+        self.items[item.name] = item
 
 
-@app.route("/", methods=['GET', "POST"])
+class Item:
+
+    def __init__(self, name, short_desc, long_desc):
+        self.name = name
+        self.short = short_desc
+        self.long = long_desc
+        self.comments = []
+        self.rateings = []
+
+    def add_comment(self, comment):
+        self.comments.append(comment)
+
+    def add_rateing(self, rateing):
+        self.rateings.append(rateing)
+
+    def score(self):
+        i, n = 0, 0
+        for rateing in self.rateings:
+            i += rateing.val
+            n += 1
+        return i / n if n > 0 else 0
+
+
+class Comment:
+
+    def __init__(self, user, text):
+        self.user = user
+        self.text = text
+
+class Rateing:
+
+    def __init__(self, val):
+        self.val = val
+
+DAT = [Category("Initial catagory")] # THIS NEEDS TO BE A DICT
+
+
+def success(data):
+    return jsonify({"success": True, "data": data})
+
+
+def error(err_msg):
+    return jsonify({"success": False, "error": err_msg})
+
+
+
+@app.route("/")
 def index():
+    return render_template("index.html")
+
+
+# FIELDS FOR POST:
+#   catName
+@app.route("/api/categories", methods=["GET"])
+def categories():
+    return success({"Categories": list(map(lambda it: it.name, DAT))}) if request.method == "GET" \
+        else error("{0} is unavailable".format(request.method))
+
+
+@app.route("/api/categories/<string:cat>", methods=["GET", "PUT", "DELETE"])
+def detail(cat):
+    cats = list(map(lambda it: it.name, DAT))
     if request.method == "GET":
-        return render_template('index.html', cat=DATA.keys())
-    elif request.method == "POST":
-        cat = request.form["cat"]
-        if cat:
-            DATA[cat] = []
-        else:
-            return "CAT = undef"
-        return redirect("/", 302)
+        if cat in cats:
+            return success({"items": list(map(lambda it: it.name, DAT[cat].name ))})
+    elif request.method == "PUT":
+        return success("")
+    elif request.method == "DELETE":
+        return success("")
+    return error("{0} is unssported".format(request.method))
+
+
+@app.route("/api/categories/<string:cat>/<string:item>", methods=["GET", "POST", "DELETE"])
+def item(id, item):
+    pass
+
+
+@app.route("/api/categories/<string:cat>/<string:item>/rate", methods=["GET", "POST"])
+def rate(id, item):
+    pass
+
+
+@app.route("/api/categories/<int:id>/<string:item>/comment", methods=["GET", "POST"])
+def comment(id, item):
+    pass
 
 
 
-@app.route('/<string:cat>', methods=["GET", "POST"])
-def overview(cat=None):
-    if request.method == "GET":
-        if cat not in DATA:
-            return "Not found"
-        return render_template("cat.html", cName=cat, entries=DATA[cat])
-    elif request.method == "POST":
-        if cat in DATA:
-            desc, name = request.form["desc"], request.form["name"]
-            DATA[cat] = desc
-            return redirect("/" + cat)
 
-        else:
-            return "NOT FOUND"
+
+
+
+
+
+
+
+
+
+
+
