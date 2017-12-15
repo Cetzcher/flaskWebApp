@@ -1,0 +1,4 @@
+#!/bin/bash
+# check requirements
+command -v flask || exit 0
+FLASK_APP=main.py flask run

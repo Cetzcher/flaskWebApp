@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+    <h1> Welcome </h1>
+    <form method="post" action="/" >
+        <span> Category name: <input name="cat" type="text"> </span>
+        <span> <input type="submit" value="create"> </span>
+    </form>
+    <ul>
+        {% for c in cat %}
+        <li><a href="/{{ c }}">{{ c }}</a></li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
