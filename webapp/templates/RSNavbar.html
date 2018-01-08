@@ -1,0 +1,27 @@
+        <div class="container">
+            <div class="row">
+                <span class="pull-right">
+                    <h4><a href="/items/all"> &nbsp;&nbsp;show all </a></h4>
+                </span>
+                <div class="span12">
+                    <form class="form-inline pull-right" id="search-form">
+                        <label class="sr-only" for="search">search ... </label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                            <div class="input-group-addon">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </div>
+                            <input type="text" class="form-control" id="search" placeholder="Username">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.getElementById("search-form").addEventListener(
+        "submit",
+        function(ev) {
+            ev.preventDefault();
+            window.location.href = "/search/" + encodeURI(document.getElementById("search").value);
+        },
+        true);
+        </script>

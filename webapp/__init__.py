@@ -35,8 +35,13 @@ def search(searchstr):
     return 'User %s' % searchstr
 
 
+@app.route("/items/all")
+def all():
+    return render_template("item_list.html")
+
+
 @app.route("/items/<string:item>")
-def serve_category(item):
+def serve_item(item):
     # show all items in given cat.
     return ""
 
@@ -45,3 +50,5 @@ def serve_category(item):
 def serve_comments(item):
     # show the comments to that item when GET, when POST create a new one.
     pass
+
+app.run(port=5000)
