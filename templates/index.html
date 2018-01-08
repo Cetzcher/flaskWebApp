@@ -2,27 +2,13 @@
 {% block styles %}
 {{super()}}
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-<link rel="stylesheet" href="static/searchfield.css">
+<link rel="stylesheet" href="/static/searchfield.css">
 {% endblock %}
 
 {% block title %}This is an example page{% endblock %}
 
 {% block navbar %}
-        <div class="container">
-            <div class="row">
-                <div class="span12">
-                    <form class="form-inline pull-right" id="search-form">
-                        <label class="sr-only" for="search">search ... </label>
-                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                            <div class="input-group-addon">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </div>
-                            <input type="text" class="form-control" id="search" placeholder="Username">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+{% include 'RSNavbar.html' %}
 {% endblock %}
 
 {% block content %}
@@ -74,18 +60,6 @@
         </footer>
 
     </div>
-
-<script>
-
-    document.getElementById("search-form").addEventListener(
-        "submit",
-        function(ev) {
-            ev.preventDefault();
-            window.location.href = "/search/" + encodeURI(document.getElementById("search").value);
-        },
-        true);
-
-</script>
 {% endblock %}
 
 

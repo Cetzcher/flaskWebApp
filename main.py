@@ -35,8 +35,13 @@ def search(searchstr):
     return 'User %s' % searchstr
 
 
+@app.route("/items/all")
+def all():
+    return render_template("item_list.html")
+
+
 @app.route("/items/<string:item>")
-def serve_category(item):
+def serve_item(item):
     # show all items in given cat.
     return ""
 
