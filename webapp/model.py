@@ -50,6 +50,26 @@ class Database:
         """
         self.mongo.db.comments.delete_one(comment.__dict__)
 
+    def update_item(self, name, item):
+        """
+        Updates an item that matches the name given by the parameter
+
+        :param name: The name of the item
+        :param item: The new item
+        :return: None
+        """
+        self.mongo.db.items.update_one(name, item.__dict__)
+
+    def update_comment(self, comment, new_comment):
+        """
+        Updates a comment that matches the given comment parameter
+
+        :param comment: The comment that needs to be updated
+        :param new_comment: The updated comment that will be inserted
+        :return: None
+        """
+        self.mongo.db.comments.update_one(comment.__dict__, new_comment.__dict__)
+
     def get_all_items(self):
         """
         Gets all the items
