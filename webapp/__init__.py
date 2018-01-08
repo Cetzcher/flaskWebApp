@@ -50,3 +50,5 @@ def serve_item(item):
 def serve_comments(item):
     # show the comments to that item when GET, when POST create a new one.
     pass
+
+app.run(port=5000)
