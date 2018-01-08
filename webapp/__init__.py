@@ -37,7 +37,11 @@ def search(searchstr):
 
 @app.route("/items/all")
 def all():
-    return render_template("item_list.html")
+    return render_template("item_list.html", items=[{"name": "item1", "price": 300, "description": "a genirc item"},
+                                                    {"name": "item1", "price": 300, "description": "a genirc item"},
+                                                    {"name": "item1", "price": 300, "description": "a genirc item"},
+                                                    {"name": "item1", "price": 300, "description": "a genirc item"},
+                                                    {"name": "item1", "price": 300, "description": "a genirc item"}])
 
 
 @app.route("/items/<string:item>")
