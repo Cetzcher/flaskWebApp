@@ -15,18 +15,54 @@ class Database:
         self.mongo = PyMongo(app)
 
     def insert_item(self, item):
+        """
+        Inserts a document that contains information about an item
+
+        :param item: Item class that will be inserted in the database
+        :return: None
+        """
         self.mongo.db.items.insert_one(item.__dict__)
 
     def insert_comment(self, comment):
+        """
+        Inserts a document that contains information about a comment
+
+        :param comment: Comment class that will be inserted in the database
+        :return: None
+        """
         self.mongo.db.comments.insert_one(comment.__dict__)
 
+    def delete_item(self, name):
+        """
+        Deletes an item from the web shop that matches with the parameter name
+
+        :param name: The name of the item that will be deleted
+        :return: None
+        """
+        self.mongo.db.items.delete_one(name)
+
+    def delete_comment(self, comment):
+        """
+        Deletes a comment that matches the comment object given by the parameter
+
+        :param comment: Comment object that will be deleted
+        :return: None
+        """
+        self.mongo.db.comments.delete_one(comment.__dict__)
+
     def get_all_items(self):
+        """
+        Gets all the items
+
+        :return: A dictionary with all the items
+        """
         return self.mongo.db.items.find()
 
     def get_all_comments(self):
         """
-        Gets all the 
-        :return:
+        Gets all the comments
+
+        :return: A dictionary with all the comments
         """
         return self.mongo.db.comments.find()
 
