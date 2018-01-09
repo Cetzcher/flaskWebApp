@@ -7,6 +7,7 @@ app = Flask(__name__)
 Bootstrap(app)
 db = Database(app)
 
+
 # API routes should return pure json data.
 # Use the API routes for the actual page.
 
@@ -64,6 +65,12 @@ def item(item):
 @app.route("/items/<string:item>/buy")
 def buy(item):
     # disallow GET since items could stop being accessible ?
+    return render_template("item_list.html", items=db.get_all_items())
+
+
+@app.route("/items/<string:item>")
+def serve_item(item):
+    # show all items in given cat.
     return ""
 
 
