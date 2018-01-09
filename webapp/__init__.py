@@ -1,8 +1,11 @@
 from flask import Flask, request, render_template, redirect, jsonify
 from flask_bootstrap import Bootstrap  # pip3 install flask-bootstrap
+from webapp import model
 
 app = Flask(__name__)
 Bootstrap(app)
+mongoDB = model.Database(app)
+
 
 # API routes should return pure json data.
 # Use the API routes for the actual page.
@@ -37,11 +40,8 @@ def search(searchstr):
 
 @app.route("/items/all")
 def all():
-    return render_template("item_list.html", items=[{"name": "item1", "price": 300, "description": "a genirc item"},
-                                                    {"name": "item1", "price": 300, "description": "a genirc item"},
-                                                    {"name": "item1", "price": 300, "description": "a genirc item"},
-                                                    {"name": "item1", "price": 300, "description": "a genirc item"},
-                                                    {"name": "item1", "price": 300, "description": "a genirc item"}])
+    all_items = mongoDB.get_all_items()
+    return render_template("item_list.html", items=all_items)
 
 
 @app.route("/items/<string:item>")
