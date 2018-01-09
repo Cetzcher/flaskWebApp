@@ -23,6 +23,9 @@ class Database:
         """
         self.mongo.db.items.insert_one(item.__dict__)
 
+    def get_item(self, item_name):
+        self.mongo.db.items.find_one({"name": str(item_name)})
+
     def insert_comment(self, comment):
         """
         Inserts a document that contains information about a comment
@@ -93,15 +96,16 @@ class Database:
         :param search_name: The searched item
         :return: A list of suggested items
         """
-        name_list = map(lambda it: it.get("name"), self.mongo.db.items.find())
+        name_dict = {d["name"]: d for d in self.mongo.db.items.find()}
         suggestions = []
         pattern = '.*?'.join(search_name)  # Converts 'djm' to 'd.*?j.*?m'
+
         regex = re.compile(pattern)  # Compiles a regex.
-        for item in name_list:
-            match = regex.search(item)  # Checks if the current item matches the regex.
+        for key in name_dict.keys():
+            match = regex.search(key)  # Checks if the current item matches the regex.
             if match:
-                suggestions.append((len(match.group()), match.start(), item))
-        return [x for _, _, x in sorted(suggestions)]
+                suggestions.append((len(match.group()), match.start(), key))
+        return [name_dict[x] for _, _, x in sorted(suggestions)]
 
 
 class Item:

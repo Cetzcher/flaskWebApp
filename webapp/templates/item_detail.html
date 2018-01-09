@@ -1,0 +1,29 @@
+{% extends "bootstrap/base.html" %}
+{% block styles %}
+{{super()}}
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/searchfield.css">
+<link rel="stylesheet" href="/static/list.css">
+{% endblock %}
+
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+{% include 'RSNavbar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3> {{ item["name"] }}</h3>
+    <p>
+        {{ item["description"] }}
+    </p>
+    <p>
+        {{ item["price"] }} €
+    </p>
+
+    <button> BUY</button>
+</div>
+{% endblock %}
+
+

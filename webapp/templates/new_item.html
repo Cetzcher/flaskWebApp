@@ -1,0 +1,59 @@
+{% extends "bootstrap/base.html" %}
+{% block styles %}
+{{super()}}
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/searchfield.css">
+<link rel="stylesheet" href="/static/list.css">
+{% endblock %}
+
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+{% include 'RSNavbar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h3 class="text-muted">Flask + BS Webshop</h3>
+    </div>
+    <div class="jumbotron">
+        <h2>Create new Item</h2>
+        {% if err %}
+        <small class="btn btn-danger"> There was an error; {{ err }}</small>
+        {% endif %}
+    </div>
+
+    <form action="/items/new" method="post">
+        <div class="form-group row">
+            <label for="name" class="col-sm-2 col-form-label">Item Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" placeholder="Item Name" name="name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="url" class="col-sm-2 col-form-label">Image URL</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="url" placeholder="image url" name="url">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="price" class="col-sm-2 col-form-label">price in €</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="price" placeholder="30.00" name="price">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 col-form-label">Describe the item</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="description" rows="8" name="description"></textarea>
+            </div>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+
+
+</div>
+{% endblock %}
+
+
