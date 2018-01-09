@@ -41,9 +41,7 @@ def create():
         price = request.form.get("price")
         print(name, url, desc, price)
         try:
-            if db.get_item(name) is not None:
-                raise ValueError("Item already exists")
-            elif not name or price == 0:
+            if not name or price == 0:
                 raise ValueError("Item needs a name and price > 0")
 
             price = float(price)
@@ -59,19 +57,13 @@ def create():
 @app.route("/items/<string:item>", methods=["GET"])
 def item(item):
     # shows a detail view of the item i.e comments, price, buy link etc
-    return render_template("item_detail.html", item=db.get_item(item))
+    return render_template("item_detail.html", item=list(db.get_item(item))[0])
 
 
 @app.route("/items/<string:item>/buy")
 def buy(item):
     # disallow GET since items could stop being accessible ?
     return render_template("item_list.html", items=db.get_all_items())
-
-
-@app.route("/items/<string:item>")
-def serve_item(item):
-    # show all items in given cat.
-    return ""
 
 
 app.run(port=5000)

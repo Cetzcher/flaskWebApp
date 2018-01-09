@@ -24,7 +24,7 @@ class Database:
         self.mongo.db.items.insert_one(item.__dict__)
 
     def get_item(self, item_name):
-        self.mongo.db.items.find_one({"name": str(item_name)})
+        return self.mongo.db.items.find({"name": str(item_name)})
 
     def insert_comment(self, comment):
         """
