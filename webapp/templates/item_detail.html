@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/static/list.css">
 {% endblock %}
 
-{% block title %}This is an example page{% endblock %}
+{% block title %}PS Webshop{% endblock %}
 
 {% block navbar %}
 {% include 'RSNavbar.html' %}
@@ -19,14 +19,43 @@
     </div>
     <div class="row">
         <div class="col-md4">
-            <p>{{ item["name"] }} </p>
+            <h1>{{ item["name"] }} </h1>
             <hr>
             <button class="btn btn-success">Buy!</button>
             <p>{{ item["price"] }}</p>
             <p> {{ item["description"] }}</p>
             <figure class="pull-left">
-                <img class="media-object img-rounded img-responsive"  src="{{ item['url'] }}" alt="placehold.it/350x250" >
+                <img class="media-object img-rounded img-responsive"  src='{{ item["pic_url"] }}'
+                     alt="placehold.it/350x250">
             </figure>
+        </div>
+        <br>
+        <div>
+            <form action='/items/ {{ item["name"] }}' method="post">
+                <div class="form-group row">
+                    <label for="username" class="col-sm-2 col-form-label">Username</label>
+                    <br>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="username" placeholder="Username" name="username">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="content" class="col-sm-2 col-form-label">Comment</label>
+                    <br>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="content" rows="8" name="content"></textarea>
+                    </div>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+        </div>
+        <div>
+            <h2>Comments</h2>
+            {% for user in comments %}
+                <p>{{ user }} wrote </p>
+                <p>{{ comments[user] }}</p>
+                <br>
+            {% endfor %}
         </div>
     </div>
 </div>

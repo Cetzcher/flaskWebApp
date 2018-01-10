@@ -37,12 +37,13 @@ def create():
     else:
         name = request.form.get("name")
         desc = request.form.get("description")
-        url = request.form.get("desc")
+        url = request.form.get("url")
         price = request.form.get("price")
-        print(name, url, desc, price)
         try:
             if not name or price == 0:
                 raise ValueError("Item needs a name and price > 0")
+            elif not db.get_item(name):
+                raise NameError("The name of the item is already in use")
 
             price = float(price)
 
@@ -51,13 +52,29 @@ def create():
             db.insert_item(Item(name, desc, price, url))
             return redirect("/items/all", 302)
         except ValueError as e:
-            return render_template("new_item.html", err=str(e))
+            return render_template("err.html", err=str(e))
+        except NameError as e:
+            return render_template("err.html", err=str(e))
 
 
-@app.route("/items/<string:item>", methods=["GET"])
+@app.route("/items/<string:item>", methods=["GET", "POST"])
 def item(item):
-    # shows a detail view of the item i.e comments, price, buy link etc
-    return render_template("item_detail.html", item=list(db.get_item(item))[0])
+    if request.method == "GET":
+        got_item = list(db.get_item(item))[0]
+        print(got_item)
+        # shows a detail view of the item i.e comments, price, buy link etc
+        return render_template("item_detail.html", item=got_item, comments=got_item["comments"])
+    else:
+        got_item = list(db.get_item(item[1:]))[0]
+        username = request.form.get("username")
+        content = request.form.get("content")
+        try:
+            if username in got_item["comments"]:
+                raise NameError("Username already in use")
+            db.insert_comment(got_item, username, content)
+            return redirect("/items/" + item[1:])
+        except NameError as e:
+            return render_template("err.html", err=str(e))
 
 
 @app.route("/items/<string:item>/buy")

@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+{% block styles %}
+{{super()}}
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/searchfield.css">
+{% endblock %}
+
+{% block title %}PS Webshop Error{% endblock %}
+
+{% block navbar %}
+{% include 'RSNavbar.html' %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>An error happened:</h1>
+        <h2>{{ err }}</h2>
+
+        <footer class="footer">
+            <p>&copy; Pierre Rieger, Filip Scopulovic 2018 </p>
+        </footer>
+    </div>
+{% endblock %}

@@ -21,19 +21,32 @@ class Database:
         :param item: Item class that will be inserted in the database
         :return: None
         """
-        self.mongo.db.items.insert_one(item.__dict__)
+        if isinstance(item, Item):
+            self.mongo.db.items.insert_one(item.__dict__)
+        else:
+            self.mongo.db.items.insert_one(item)
 
     def get_item(self, item_name):
+        """
+        Gets an item
+
+        :param item_name: The name of the item
+        :return: The item as a dictionary
+        """
         return self.mongo.db.items.find({"name": str(item_name)})
 
-    def insert_comment(self, comment):
+    def insert_comment(self, item, username, content):
         """
-        Inserts a document that contains information about a comment
+        Gets a new item and puts in a new comment then it updates the item
 
-        :param comment: Comment class that will be inserted in the database
+        :param item: The item where the comment belongs
+        :param username: The name of the user who wrote the comment
+        :param content: Content of the content
         :return: None
         """
-        self.mongo.db.comments.insert_one(comment.__dict__)
+        new_item = list(self.get_item(item["name"]))[0]
+        new_item["comments"][username] = content
+        self.update_item(item["name"], new_item)
 
     def delete_item(self, name):
         """
@@ -42,16 +55,20 @@ class Database:
         :param name: The name of the item that will be deleted
         :return: None
         """
-        self.mongo.db.items.delete_one(name)
+        self.mongo.db.items.delete_one(list(self.get_item(name))[0])
 
-    def delete_comment(self, comment):
+    def delete_comment(self, item, username):
         """
-        Deletes a comment that matches the comment object given by the parameter
+        Deletes a comment from an item
+        It gets the old item, deletes the comment that matches the username then it updates the item
 
-        :param comment: Comment object that will be deleted
+        :param item: The item the comment belongs to
+        :param username: The name of the user who wrote the item
         :return: None
         """
-        self.mongo.db.comments.delete_one(comment.__dict__)
+        new_item = list(self.get_item(item["name"]))[0]
+        del new_item["comments"][username]
+        self.update_item(item["name"], new_item)
 
     def update_item(self, name, item):
         """
@@ -61,17 +78,22 @@ class Database:
         :param item: The new item
         :return: None
         """
-        self.mongo.db.items.update_one(name, item.__dict__)
+        self.delete_item(name)
+        self.insert_item(item)
 
-    def update_comment(self, comment, new_comment):
+    def update_comment(self, item, new_content, username):
         """
-        Updates a comment that matches the given comment parameter
+        Updates a comment from an item that matches the given username
+        It first gets the item then it changes the comment and updates the item
 
-        :param comment: The comment that needs to be updated
-        :param new_comment: The updated comment that will be inserted
+        :param item: The item which contains the new comment
+        :param new_content: The updated comment that will be inserted
+        :param username: The name of the user who wrote the comment
         :return: None
         """
-        self.mongo.db.comments.update_one(comment.__dict__, new_comment.__dict__)
+        new_item = list(self.get_item(item["name"]))[0]
+        new_item["comments"][username] = new_content
+        self.update_item(item["name"], new_item)
 
     def get_all_items(self):
         """
@@ -80,14 +102,6 @@ class Database:
         :return: A dictionary with all the items
         """
         return self.mongo.db.items.find()
-
-    def get_all_comments(self):
-        """
-        Gets all the comments
-
-        :return: A dictionary with all the comments
-        """
-        return self.mongo.db.comments.find()
 
     def find_item(self, search_name):
         """
@@ -110,7 +124,7 @@ class Database:
 
 class Item:
 
-    def __init__(self, name="", description="", price=0.00, pic_url=""):
+    def __init__(self, name="", description="", price=0.00, pic_url="", comments={}):
         """
         Constructor of the Item class
 
@@ -123,6 +137,7 @@ class Item:
         self.description = description
         self.price = price
         self.pic_url = pic_url
+        self.comments = comments
 
     def json_to_txt(self, json_dump):
         """
@@ -135,29 +150,4 @@ class Item:
         self.description = json_dump.get('description')
         self.price = json_dump.get('price')
         self.pic_url = json_dump.get('pic_url')
-
-
-class Comment:
-
-    def __init__(self, username="", item_name="", description=""):
-        """
-        Constructor of the Comment class
-
-        :param username: The username of the user who wrote the comment
-        :param item_name: The name of the item the comment belongs to
-        :param description: The content the user wrote
-        """
-        self.username = username
-        self.item_name = item_name
-        self.description = description
-
-    def json_to_txt(self, json_dump):
-        """
-        Takes a JSON dictionary and gives the values to the attributes
-
-        :param json_dump: JSON dictionary
-        :return: None
-        """
-        self.username = json_dump.get('username')
-        self.item_name = json_dump.get('item_name')
-        self.description = json_dump.get('description')
+        self.comments = json_dump.get('comments')
