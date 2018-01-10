@@ -43,7 +43,7 @@ def create():
             if not name or price == 0:
                 raise ValueError("Item needs a name and price > 0")
             elif not db.get_item(name):
-                raise NameError("The name of the item is already in use")
+                raise ValueError("The name of the item is already in use")
 
             price = float(price)
 
@@ -52,9 +52,7 @@ def create():
             db.insert_item(Item(name, desc, price, url))
             return redirect("/items/all", 302)
         except ValueError as e:
-            return render_template("err.html", err=str(e))
-        except NameError as e:
-            return render_template("err.html", err=str(e))
+            return render_template("new_item.html", err=str(e))
 
 
 @app.route("/items/<string:item>", methods=["GET", "POST"])
