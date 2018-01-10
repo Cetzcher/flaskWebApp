@@ -29,8 +29,16 @@
                      alt="placehold.it/350x250">
             </figure>
         </div>
-        <br>
+        <br style="clear: both;">
         <div>
+            <h2>Ratings</h2>
+            {% for user in comments %}
+                <h3>{{ user }} wrote </h3>
+                <p>{{ comments[user] }}</p>
+            {% endfor %}
+        </div>
+        <div>
+            <h2>Write a rating</h2>
             <form action='/items/ {{ item["name"] }}' method="post">
                 <div class="form-group row">
                     <label for="username" class="col-sm-2 col-form-label">Username</label>
@@ -48,14 +56,6 @@
                 </div>
                 <input class="btn btn-primary" type="submit" value="Submit">
             </form>
-        </div>
-        <div>
-            <h2>Comments</h2>
-            {% for user in comments %}
-                <p>{{ user }} wrote </p>
-                <p>{{ comments[user] }}</p>
-                <br>
-            {% endfor %}
         </div>
     </div>
 </div>

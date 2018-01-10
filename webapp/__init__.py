@@ -68,10 +68,10 @@ def item(item):
         content = request.form.get("content")
         try:
             if username in got_item["comments"]:
-                raise NameError("Username already in use")
+                raise ValueError("Username already in use")
             db.insert_comment(got_item, username, content)
             return redirect("/items/" + item[1:])
-        except NameError as e:
+        except ValueError as e:
             return render_template("err.html", err=str(e))
 
 
